@@ -1,4 +1,4 @@
-module github.com/cascax/colorthief-go
+module github.com/weitianhan/colorthief-go
 
 go 1.13
 
