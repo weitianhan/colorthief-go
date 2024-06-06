@@ -22,7 +22,7 @@ const (
 //)
 
 // GetPalette return cluster similar colors by the median cut algorithm
-func GetPalette(img image.Image, maxCubes int) ([]color.Color, error) {
+func GetPalette(img image.Image, maxCubes int) ([]color.Color, []int, error) {
 	hist := getHistogram(img)
 	//defer func() {
 	//	copy(hist, emptyHistogram)
@@ -32,11 +32,13 @@ func GetPalette(img image.Image, maxCubes int) ([]color.Color, error) {
 	cubes, _ := cutCubes(hist, maxCubes)
 
 	colors := make([]color.Color, 0, len(cubes))
+	pix_num := make([]int, 0, len(cubes))
 	for _, cube := range cubes {
 		colors = append(colors, cube.GetColor(hist))
+		pix_num = append(pix_num, cube.Count)
 	}
 
-	return colors, nil
+	return colors, pix_num, nil
 }
 
 func getHistogram(img image.Image) []int {

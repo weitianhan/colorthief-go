@@ -2,20 +2,21 @@ package colorthief
 
 import (
 	"errors"
-	"github.com/cascax/colorthief-go/mediancut"
 	"image"
 	"image/color"
 	_ "image/gif"
 	_ "image/jpeg"
 	"image/png"
 	"os"
+
+	"github.com/cascax/colorthief-go/mediancut"
 )
 
 var DefaultMaxCubes = 6
 
 // GetColorFromFile return the base color from the image file
 func GetColorFromFile(imgPath string) (color.Color, error) {
-	colors, err := GetPaletteFromFile(imgPath, DefaultMaxCubes)
+	colors, _, err := GetPaletteFromFile(imgPath, DefaultMaxCubes)
 	if err != nil {
 		return color.RGBA{}, nil
 	}
@@ -24,7 +25,7 @@ func GetColorFromFile(imgPath string) (color.Color, error) {
 
 // GetColor return the base color from the image
 func GetColor(img image.Image) (color.Color, error) {
-	colors, err := GetPalette(img, DefaultMaxCubes)
+	colors, _, err := GetPalette(img, DefaultMaxCubes)
 	if err != nil {
 		return color.RGBA{}, nil
 	}
@@ -32,23 +33,23 @@ func GetColor(img image.Image) (color.Color, error) {
 }
 
 // GetPaletteFromFile return cluster similar colors from the image file
-func GetPaletteFromFile(imgPath string, maxCubes int) ([]color.Color, error) {
+func GetPaletteFromFile(imgPath string, maxCubes int) ([]color.Color, []int, error) {
 	f, err := os.Open(imgPath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	defer f.Close()
 	img, _, err := image.Decode(f)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	return GetPalette(img, maxCubes)
 }
 
 // GetPalette return cluster similar colors by the median cut algorithm
-func GetPalette(img image.Image, maxCubes int) ([]color.Color, error) {
+func GetPalette(img image.Image, maxCubes int) ([]color.Color, []int, error) {
 	return mediancut.GetPalette(img, maxCubes)
 }
 

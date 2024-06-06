@@ -1,12 +1,13 @@
 package colorthief
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"image"
 	"image/color"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func printColor(t *testing.T, colors []color.Color) {
@@ -15,7 +16,7 @@ func printColor(t *testing.T, colors []color.Color) {
 }
 
 func TestGetPaletteFromFile(t *testing.T) {
-	colors, err := GetPaletteFromFile("img/image-1.png", 6)
+	colors, _, err := GetPaletteFromFile("img/image-1.png", 6)
 	require.Nil(t, err)
 	assert.Equal(t, 6, len(colors))
 	t.Log(colors)
@@ -24,7 +25,7 @@ func TestGetPaletteFromFile(t *testing.T) {
 
 func BenchmarkGetPaletteFromFile(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, err := GetPaletteFromFile("img/image-4.jpg", 5)
+		_, _, err := GetPaletteFromFile("img/image-4.jpg", 5)
 		assert.Nil(b, err)
 	}
 }
