@@ -9,7 +9,7 @@ import (
 	"image/png"
 	"os"
 
-	"github.com/cascax/colorthief-go/mediancut"
+	"github.com/weitianhan/colorthief-go/mediancut"
 )
 
 var DefaultMaxCubes = 6
