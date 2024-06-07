@@ -33,7 +33,7 @@ func GetColor(img image.Image) (color.Color, error) {
 }
 
 // GetPaletteFromFile return cluster similar colors from the image file
-func GetPaletteFromFile(imgPath string, maxCubes int) ([]color.Color, []int, error) {
+func GetPaletteFromFile(imgPath string, maxCubes int) ([]color.Color, []float64, error) {
 	f, err := os.Open(imgPath)
 	if err != nil {
 		return nil, nil, err
@@ -45,7 +45,14 @@ func GetPaletteFromFile(imgPath string, maxCubes int) ([]color.Color, []int, err
 		return nil, nil, err
 	}
 
-	return GetPalette(img, maxCubes)
+	bounds := img.Bounds()
+	totalPixels := (bounds.Max.X - bounds.Min.X) * (bounds.Max.Y - bounds.Min.Y)
+	colors, pixNum, err := GetPalette(img, maxCubes)
+	ratio := make([]float64, len(pixNum))
+	for i := range pixNum {
+		ratio[i] = float64(pixNum[i]) / float64(totalPixels)
+	}
+	return colors, ratio, err
 }
 
 // GetPalette return cluster similar colors by the median cut algorithm
